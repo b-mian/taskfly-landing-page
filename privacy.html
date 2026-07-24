@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Taskfly: privacy and data flow</title>
+  <meta name="description" content="What Taskfly stores, where it stores it, and every network request it can make. No account, no tracking, no Taskfly server." />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    try {
+      const t = localStorage.getItem("taskfly-theme");
+      if (t) document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <a class="logo" href="index.html">Taskfly</a>
+      <nav class="top">
+        <a href="index.html#download">Download</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="index.html#support">Support</a>
+        <a id="nav-github" href="#">GitHub</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch between light and dark mode">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap privacy-page">
+    <h1>Privacy and data flow</h1>
+    <p>
+      This page explains what Taskfly does with your data, in plain English.
+      Taskfly is open source under GPLv3, so you can check every claim on this
+      page against the code.
+    </p>
+
+    <h2>What Taskfly stores, and where</h2>
+    <ul>
+      <li><strong>Your notes</strong> live in a SQLite database inside your system's application data folder. They stay on your machine, except in the two cases listed below.</li>
+      <li><strong>Your AI API key</strong> is stored in your operating system's keychain (macOS Keychain, Windows Credential Manager). It is never written to a plain file, and it is never sent to us. There is no "us" to send it to, because Taskfly has no server.</li>
+      <li><strong>Settings</strong> like your model, endpoint, shortcuts, and webhook URLs live in a local settings.json file.</li>
+      <li><strong>Markdown exports</strong> are only written when you click Export, into a local folder you can open any time.</li>
+    </ul>
+
+    <h2>When Taskfly reads your clipboard</h2>
+    <p>
+      Only when you press the capture shortcut or click Capture. There is no
+      background clipboard polling, no screen recording, and no keylogging. If you
+      never press capture, Taskfly never reads anything.
+    </p>
+
+    <h2>Every network request Taskfly can make</h2>
+    <ol>
+      <li>
+        <strong>AI summaries.</strong> Sent directly to the endpoint you set up
+        yourself: OpenAI, Azure OpenAI, a company gateway, or a local model through
+        Ollama (in that last case, nothing leaves your machine at all). Before any
+        request, Taskfly strips out anything that looks like a secret (API keys,
+        tokens, private keys, card numbers) and shows you the exact text for
+        approval. Nothing is ever sent without that review.
+      </li>
+      <li>
+        <strong>Slack and Teams sharing.</strong> Only when you click Share, and
+        only to the webhook URL you configured yourself.
+      </li>
+    </ol>
+    <p>
+      That is the complete list. No telemetry, no analytics, no crash reporting, no
+      update pings (updates are manual downloads for now), and no accounts.
+    </p>
+
+    <h2>What your AI provider sees</h2>
+    <p>
+      Summaries are processed by the provider you picked, under your own agreement
+      with them. For example, OpenAI does not train on API data by default. If your
+      employer has an approved endpoint, like Azure OpenAI or an internal gateway,
+      point Taskfly at it in Settings. If you want nothing to leave your machine,
+      use a local model with Ollama.
+    </p>
+
+    <h2>Deleting your data</h2>
+    <p>
+      You can delete notes inside the app, or remove the whole application data
+      folder to erase everything at once. Removing your API key in Settings deletes
+      it from the system keychain.
+    </p>
+
+    <p style="margin-top: 40px;">
+      Questions or corrections? <a id="issues-link" href="#">Open an issue on GitHub</a>.
+      This page is part of the open source project too.
+    </p>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      Taskfly is free software under the GPL-3.0 license ·
+      <a id="foot-github" href="#">Source on GitHub</a> ·
+      <a href="index.html">Home</a>
+    </div>
+  </footer>
+
+  <script>
+    const gh = "https://github.com/b-mian/taskfly"; // keep in sync with index.html
+    document.getElementById("nav-github").href = gh;
+    document.getElementById("foot-github").href = gh;
+    document.getElementById("issues-link").href = `${gh}/issues`;
+
+    (function () {
+      const root = document.documentElement;
+      const btn = document.getElementById("theme-toggle");
+      const isDark = () =>
+        root.dataset.theme
+          ? root.dataset.theme === "dark"
+          : matchMedia("(prefers-color-scheme: dark)").matches;
+      const paint = () => {
+        btn.textContent = isDark() ? "☀" : "☾";
+      };
+      btn.addEventListener("click", () => {
+        root.dataset.theme = isDark() ? "light" : "dark";
+        try {
+          localStorage.setItem("taskfly-theme", root.dataset.theme);
+        } catch (e) {}
+        paint();
+      });
+      paint();
+    })();
+  </script>
+</body>
+</html>

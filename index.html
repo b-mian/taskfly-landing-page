@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Taskfly: your work log, written as you go</title>
+  <meta name="description" content="A free, open source (GPLv3) desktop app that logs what you did and writes your standups, weekly reviews, and brag docs. Uses your own AI key. Nothing leaves your computer without your review." />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    // Apply a saved theme before first paint to avoid a flash.
+    try {
+      const t = localStorage.getItem("taskfly-theme");
+      if (t) document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <a class="logo" href="index.html">Taskfly</a>
+      <nav class="top">
+        <a href="#download">Download</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="#support">Support</a>
+        <a id="nav-github" href="#">GitHub</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch between light and dark mode">☾</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <h1>Never scramble for<br />"what did you do this week?" again</h1>
+      <p class="tag">
+        Taskfly is a small desktop app that logs your work as you go. Type a quick
+        note from the tray, and when standup or review time comes around, Taskfly
+        turns your notes into a summary. It uses your own AI key, and it shows you
+        exactly what will be sent before anything leaves your computer.
+      </p>
+      <div class="download-row" id="download">
+        <a class="btn" id="dl-mac" href="#">Download for macOS</a>
+        <a class="btn ghost" id="dl-win" href="#">Download for Windows</a>
+      </div>
+      <p class="download-note">
+        Free and open source (GPLv3). No account. No tracking.<br />
+        <span id="gatekeeper-note">On macOS, builds are not notarized yet. The first time, right-click the app
+        and choose <code class="kbd">Open</code>.</span>
+      </p>
+    </section>
+
+    <section class="wrap">
+      <h2>Made for people who have to report their work</h2>
+      <div class="grid">
+        <div class="card"><h3>Log in two keystrokes</h3><p>Click the tray icon, type, hit Enter. You can also capture your clipboard from anywhere with a keyboard shortcut.</p></div>
+        <div class="card"><h3>Standups and brag docs</h3><p>Turn your notes into a daily summary, a standup update, a weekly review, or bullet points for your performance review.</p></div>
+        <div class="card"><h3>Share in one click</h3><p>Send a finished summary straight to Slack or Microsoft Teams.</p></div>
+        <div class="card"><h3>Your AI, not ours</h3><p>Bring your own key. Use OpenAI, Azure OpenAI, a company gateway, or run a local model with Ollama. There is no Taskfly server.</p></div>
+        <div class="card"><h3>Search and streaks</h3><p>Search everything you have ever logged, and watch your streak grow on the activity heatmap.</p></div>
+        <div class="card"><h3>Markdown you own</h3><p>Export any range as plain markdown files. Your log is a folder of text files that belong to you.</p></div>
+      </div>
+    </section>
+
+    <section class="trust">
+      <div class="wrap">
+        <h2>Your notes stay on your computer</h2>
+        <ul>
+          <li><strong>Nothing is recorded unless you ask.</strong> Taskfly never watches your clipboard or your screen in the background. It only captures when you press the shortcut or type a note.</li>
+          <li><strong>Everything is stored locally.</strong> Your notes live in a database on your machine. There is no account, no sync, and no tracking of any kind.</li>
+          <li><strong>You see what gets sent.</strong> Before a summary is generated, Taskfly strips out anything that looks like a password or an API key, then shows you the exact text so you can approve it or cancel.</li>
+          <li><strong>You can check all of this yourself.</strong> The whole app is open source under GPLv3. Read the code, build it from source, or see the <a href="privacy.html">privacy page</a> for the details in plain English.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap" id="support">
+      <div class="support-box">
+        <h2>Free forever. Kept alive by donations.</h2>
+        <p>
+          Taskfly has no subscription and nothing locked behind a paywall. You bring
+          your own AI key, so there is nothing to charge you for. If it saves you
+          time, a small donation helps keep it going.
+        </p>
+        <div class="download-row">
+          <a class="btn" id="donate-kofi" href="#">☕ Support on Ko-fi</a>
+          <a class="btn ghost" id="donate-sponsors" href="#">♥ GitHub Sponsors</a>
+        </div>
+        <p class="milestone">
+          First goal: <strong>$99 a year</strong> pays for Apple notarization, so macOS
+          builds open without security warnings for everyone.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      Taskfly is free software under the <a id="foot-license" href="#">GPL-3.0 license</a> ·
+      <a id="foot-github" href="#">Source on GitHub</a> ·
+      <a id="foot-releases" href="#">All releases</a> ·
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </footer>
+
+  <script>
+    // ---- EDIT THESE before publishing ----
+    const CONFIG = {
+      github: "b-mian/taskfly", // owner/repo
+      kofi: null,               // your Ko-fi page URL; button stays hidden until set
+      sponsors: "https://github.com/sponsors/b-mian", // set null to hide until enabled
+      // Set these to the exact asset names once your first release exists,
+      // or leave null to send users to the releases page.
+      macAsset: null,  // e.g. "Taskfly_0.2.0_aarch64.dmg"
+      winAsset: null,  // e.g. "Taskfly_0.2.0_x64-setup.exe"
+    };
+    // --------------------------------------
+
+    const gh = `https://github.com/${CONFIG.github}`;
+    const releases = `${gh}/releases`;
+    const latest = (asset) =>
+      asset ? `${gh}/releases/latest/download/${asset}` : `${releases}/latest`;
+
+    document.getElementById("dl-mac").href = latest(CONFIG.macAsset);
+    document.getElementById("dl-win").href = latest(CONFIG.winAsset);
+    // Donation buttons are hidden until their URLs are configured, so no one
+    // ever lands on a wrong or unclaimed page.
+    const setOrHide = (id, url) => {
+      const el = document.getElementById(id);
+      if (url) el.href = url;
+      else el.style.display = "none";
+    };
+    setOrHide("donate-kofi", CONFIG.kofi);
+    setOrHide("donate-sponsors", CONFIG.sponsors);
+    for (const id of ["nav-github", "foot-github"]) document.getElementById(id).href = gh;
+    document.getElementById("foot-releases").href = releases;
+    document.getElementById("foot-license").href = `${gh}/blob/main/LICENSE`;
+
+    // Put the visitor's own OS first.
+    const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
+    if (!isMac) {
+      const mac = document.getElementById("dl-mac");
+      const win = document.getElementById("dl-win");
+      mac.classList.add("ghost");
+      win.classList.remove("ghost");
+      win.parentNode.insertBefore(win, mac);
+      document.getElementById("gatekeeper-note").textContent =
+        "On Windows, unsigned builds may show a SmartScreen prompt. Choose “More info”, then “Run anyway”.";
+    }
+
+    // Light/dark toggle. Saved choice beats the OS setting.
+    (function () {
+      const root = document.documentElement;
+      const btn = document.getElementById("theme-toggle");
+      const isDark = () =>
+        root.dataset.theme
+          ? root.dataset.theme === "dark"
+          : matchMedia("(prefers-color-scheme: dark)").matches;
+      const paint = () => {
+        btn.textContent = isDark() ? "☀" : "☾";
+      };
+      btn.addEventListener("click", () => {
+        root.dataset.theme = isDark() ? "light" : "dark";
+        try {
+          localStorage.setItem("taskfly-theme", root.dataset.theme);
+        } catch (e) {}
+        paint();
+      });
+      paint();
+    })();
+  </script>
+</body>
+</html>
